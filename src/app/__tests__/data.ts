@@ -1,6 +1,6 @@
 export type DiaryEntryType = {
     type: string;
-    name?: string;
+    name?: string | null;
     description: string;
 };
 
