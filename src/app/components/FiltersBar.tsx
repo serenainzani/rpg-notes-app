@@ -14,7 +14,7 @@ export default function FiltersBar({
 }: FiltersBarType) {
     return (
         <BottomNavigation
-            className="w-96 bg-white"
+            className="bg-white"
             value={value}
             onChange={handleFilterChange}
         >

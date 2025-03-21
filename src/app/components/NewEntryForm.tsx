@@ -68,9 +68,9 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white">
-            <Stack direction="row" className="w-96">
-                <FormControl className="w-48">
+        <form onSubmit={handleSubmit} className="bg-white pb-2">
+            <Stack direction="row" className="w-96 pb-2">
+                <FormControl className="w-48 mr-1">
                     <InputLabel id="entry-type-label">Entry Type</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
@@ -95,6 +95,7 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
                         required
                         onChange={handleChange}
                         value={formEntryValues.name}
+                        className="ml-1"
                     />
                 )}
             </Stack>
@@ -104,8 +105,8 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
                     name="description"
                     label="Description"
                     multiline
+                    rows={3}
                     required
-                    rows={5}
                     className="w-96"
                     onChange={handleChange}
                     value={formEntryValues.description}

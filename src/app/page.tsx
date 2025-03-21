@@ -35,8 +35,8 @@ export default function Home() {
 
     return (
         <div>
-            <div className="pb-64">
-                <Typography variant="h1" gutterBottom>
+            <div className="pb-64 pt-8">
+                <Typography variant="h2" component="h1" gutterBottom>
                     RPG Notes
                 </Typography>
                 {filteredNotes.map((entry, index) => (
@@ -48,7 +48,7 @@ export default function Home() {
                     />
                 ))}
             </div>
-            <Box className="bg-green-200" sx={{ position: "fixed", bottom: 0 }}>
+            <Box className="fixed bottom-0 pt-5 bg-white">
                 <NewEntryForm updateNotes={updateNotes} />
                 <Paper elevation={3}>
                     <FiltersBar
