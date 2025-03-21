@@ -10,30 +10,50 @@ import {
     Stack,
     TextField,
 } from "@mui/material";
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { AddBox } from "@mui/icons-material";
 
 import { DiaryEntryType } from "../__tests__/data";
 
-type NewEntryFormProps = {
+type EntryFormProps = {
     updateNotes: (entry: DiaryEntryType) => void;
 };
 
-export default function NewEntryForm({ updateNotes }: NewEntryFormProps) {
-    const [entryType, setEntryType] = useState("");
-    const handleEntryTypeInputChange = (event: SelectChangeEvent) => {
-        setEntryType(event.target.value as string);
+const defaultFormValues = {
+    name: "",
+    type: "",
+    description: "",
+};
+
+export default function NewEntryForm({ updateNotes }: EntryFormProps) {
+    const [formEntryValues, setFormEntryValues] = useState(defaultFormValues);
+
+    const handleChange = (
+        event:
+            | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            | SelectChangeEvent<string>
+    ) => {
+        setFormEntryValues((prevValues) => ({
+            ...prevValues,
+            [event.target.name]: event.target.value,
+        }));
     };
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
+        const description = formData.get("description");
+        const type = String(formData.get("type")) || "note";
+        const name = ["place", "person"].includes(type)
+            ? formData.get("name")
+            : null;
         const bodyData = {
-            name: formData.get("name"),
-            type: formData.get("type"),
-            description: formData.get("description"),
+            name,
+            type,
+            description,
         };
+
         const response = await fetch("/api/note", {
             method: "POST",
             body: JSON.stringify(bodyData),
@@ -41,10 +61,10 @@ export default function NewEntryForm({ updateNotes }: NewEntryFormProps) {
                 "Content-Type": "application/json",
             },
         });
-        const responseData = await response.json();
 
-        console.log(responseData);
+        const responseData = await response.json();
         updateNotes(responseData);
+        setFormEntryValues(defaultFormValues);
     }
 
     return (
@@ -57,9 +77,9 @@ export default function NewEntryForm({ updateNotes }: NewEntryFormProps) {
                         id="type-select"
                         name="type"
                         defaultValue="note"
-                        value={entryType}
                         label="entry type"
-                        onChange={handleEntryTypeInputChange}
+                        onChange={handleChange}
+                        value={formEntryValues.type}
                     >
                         <MenuItem value="note">Note</MenuItem>
                         <MenuItem value="person">Person</MenuItem>
@@ -67,21 +87,38 @@ export default function NewEntryForm({ updateNotes }: NewEntryFormProps) {
                         <MenuItem value="important">Important</MenuItem>
                     </Select>
                 </FormControl>
-                {["person", "place"].includes(entryType) && (
-                    <TextField id="name" name="name" label="Name" required />
+                {["person", "place"].includes(formEntryValues.type) && (
+                    <TextField
+                        id="name"
+                        name="name"
+                        label="Name"
+                        required
+                        onChange={handleChange}
+                        value={formEntryValues.name}
+                    />
                 )}
             </Stack>
-            <TextField
-                id="description"
-                name="description"
-                label="Description"
-                multiline
-                rows={5}
-                className="w-96"
-            />
-            <IconButton aria-label="delete" size="large" type="submit">
-                <AddBox className="text-3xl" />
-            </IconButton>
+            <Stack direction="row" className="items-center">
+                <TextField
+                    id="description"
+                    name="description"
+                    label="Description"
+                    multiline
+                    required
+                    rows={5}
+                    className="w-96"
+                    onChange={handleChange}
+                    value={formEntryValues.description}
+                />
+                <IconButton
+                    aria-label="submit"
+                    size="large"
+                    type="submit"
+                    className="h-14"
+                >
+                    <AddBox className="text-3xl" />
+                </IconButton>
+            </Stack>
         </form>
     );
 }
