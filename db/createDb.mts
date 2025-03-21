@@ -57,7 +57,7 @@ function addTestData() {
         mockData.length - 1
     )}(?,?,?)`;
 
-    db.run(insertSql, dataForSql, function (err: Error) {
+    db.run(insertSql, dataForSql, (err: Error) => {
         if (err) {
             return console.error(err.message);
         }
