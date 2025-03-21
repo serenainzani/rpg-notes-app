@@ -54,6 +54,8 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
             description,
         };
 
+        // TODO put this all in a try catch block, so entry only appears on page if POST was a success
+
         const response = await fetch("/api/note", {
             method: "POST",
             body: JSON.stringify(bodyData),
