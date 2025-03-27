@@ -10,6 +10,7 @@ import { DiaryEntryType } from "./__tests__/data";
 export default function Home() {
     const [value, setValue] = useState("");
     const [notes, setNotes] = useState<DiaryEntryType[]>([]);
+    const [cardClicked, setCardClicked] = useState("");
 
     useEffect(() => {
         fetch("/api/notes")
@@ -57,6 +58,12 @@ export default function Home() {
                         name={entry.name}
                         description={entry.description}
                         updateNotes={updateNotes}
+                        handleCardClicked={() =>
+                            cardClicked !== entry.id
+                                ? setCardClicked(entry.id)
+                                : setCardClicked("")
+                        }
+                        isCardClicked={cardClicked === entry.id}
                     />
                 ))}
             </div>

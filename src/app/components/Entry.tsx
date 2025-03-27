@@ -21,6 +21,8 @@ type entryProps = {
     name?: string | null;
     description: string;
     updateNotes: (entry: DiaryEntryType, command: string) => void;
+    handleCardClicked: () => void;
+    isCardClicked: boolean;
 };
 
 export default function Entry({
@@ -29,6 +31,8 @@ export default function Entry({
     name,
     description,
     updateNotes,
+    handleCardClicked,
+    isCardClicked,
 }: entryProps) {
     let icon;
     switch (type) {
@@ -66,7 +70,12 @@ export default function Entry({
     };
 
     return (
-        <Card variant="outlined" sx={{ maxWidth: 360 }} className="mb-2">
+        <Card
+            variant="outlined"
+            sx={{ maxWidth: 360 }}
+            className={`mb-2 ${isCardClicked && "border-amber-900 shadow-md"}`}
+            onClick={handleCardClicked}
+        >
             <Box sx={{ p: 2 }}>
                 {name ? (
                     <>
@@ -126,17 +135,22 @@ export default function Entry({
                         </Stack>
                     </>
                 )}
-                <Stack direction="row" className="w-full items-center">
-                    <IconButton
-                        aria-label="submit"
-                        size="small"
-                        type="button"
-                        onClick={handleDelete}
-                        className="ml-auto p-0"
-                    >
-                        <DeleteForever fontSize="small" />
-                    </IconButton>
-                </Stack>
+                {isCardClicked && (
+                    <Stack direction="row" className="w-full items-center">
+                        <IconButton
+                            aria-label="submit"
+                            size="small"
+                            type="button"
+                            onClick={handleDelete}
+                            className="ml-auto p-0"
+                        >
+                            <DeleteForever
+                                fontSize="small"
+                                className="fill-gray-800"
+                            />
+                        </IconButton>
+                    </Stack>
+                )}
             </Box>
         </Card>
     );
