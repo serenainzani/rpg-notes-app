@@ -1,12 +1,35 @@
+"use client";
+
 import * as React from "react";
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { DiaryEntryType } from "../__tests__/data";
-import { Face2, Map, PriorityHigh, TextSnippet } from "@mui/icons-material";
+import {
+    Face2,
+    Map,
+    PriorityHigh,
+    TextSnippet,
+    DeleteForever,
+} from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 
-export default function Entry({ type, name, description }: DiaryEntryType) {
+type entryProps = {
+    id: string;
+    type: string;
+    name?: string | null;
+    description: string;
+    updateNotes: (entry: DiaryEntryType, command: string) => void;
+};
+
+export default function Entry({
+    id,
+    type,
+    name,
+    description,
+    updateNotes,
+}: entryProps) {
     let icon;
     switch (type) {
         case "person":
@@ -22,6 +45,25 @@ export default function Entry({ type, name, description }: DiaryEntryType) {
             icon = <TextSnippet />;
             break;
     }
+
+    const handleDelete = () => {
+        fetch(`/api/note/${id}`, {
+            method: "DELETE",
+            body: JSON.stringify({ id }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Failed to delete entry: ${id}`);
+                }
+                updateNotes({ id, type, name, description }, "DELETE");
+            })
+            .catch((error) => {
+                console.error("Failed to delete entry:", error);
+            });
+    };
 
     return (
         <Card variant="outlined" sx={{ maxWidth: 360 }} className="mb-2">
@@ -84,6 +126,17 @@ export default function Entry({ type, name, description }: DiaryEntryType) {
                         </Stack>
                     </>
                 )}
+                <Stack direction="row" className="w-full items-center">
+                    <IconButton
+                        aria-label="submit"
+                        size="small"
+                        type="button"
+                        onClick={handleDelete}
+                        className="ml-auto p-0"
+                    >
+                        <DeleteForever fontSize="small" />
+                    </IconButton>
+                </Stack>
             </Box>
         </Card>
     );

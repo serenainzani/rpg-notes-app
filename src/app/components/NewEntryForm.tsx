@@ -16,7 +16,7 @@ import { AddBox } from "@mui/icons-material";
 import { DiaryEntryType } from "../__tests__/data";
 
 type EntryFormProps = {
-    updateNotes: (entry: DiaryEntryType) => void;
+    updateNotes: (entry: DiaryEntryType, command: string) => void;
 };
 
 const defaultFormValues = {
@@ -65,7 +65,7 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
         });
 
         const responseData = await response.json();
-        updateNotes(responseData);
+        updateNotes(responseData, "POST");
         setFormEntryValues(defaultFormValues);
     }
 

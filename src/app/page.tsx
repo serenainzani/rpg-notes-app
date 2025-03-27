@@ -18,8 +18,18 @@ export default function Home() {
             .catch((error) => console.error("Fetch error:", error));
     }, []);
 
-    const updateNotes = (newEntry: DiaryEntryType) => {
-        setNotes((notes) => [...notes, newEntry]);
+    const updateNotes = (entry: DiaryEntryType, method: string) => {
+        switch (method) {
+            case "POST":
+                setNotes((notes) => [...notes, entry]);
+                break;
+            case "DELETE":
+                const removedNotes = notes.filter(
+                    (note) => entry.id !== note.id
+                );
+                setNotes(removedNotes);
+                break;
+        }
     };
 
     const handleFilterChange = (
@@ -39,12 +49,14 @@ export default function Home() {
                 <Typography variant="h2" component="h1" gutterBottom>
                     RPG Notes
                 </Typography>
-                {filteredNotes.map((entry, index) => (
+                {filteredNotes.map((entry) => (
                     <Entry
-                        key={index}
+                        key={entry.id}
+                        id={entry.id}
                         type={entry.type}
                         name={entry.name}
                         description={entry.description}
+                        updateNotes={updateNotes}
                     />
                 ))}
             </div>

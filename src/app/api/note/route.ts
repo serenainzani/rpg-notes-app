@@ -1,24 +1,20 @@
-import sqlite3 from "sqlite3";
-import { open } from "sqlite";
-import path from "path";
+import dbOpen from "@/app/helpers/dbOpen";
 
 export async function POST(req: Request, res: Response) {
-    const db = await open({
-        filename: path.resolve(process.cwd(), "db/notes.db"),
-        driver: sqlite3.Database,
-    });
+    const db = await dbOpen();
 
+    const id = crypto.randomUUID();
     const { type, name, description } = await req.json();
-    const sql = `INSERT INTO notes(type, name, description) VALUES(?,?,?)`;
+    const sql = `INSERT INTO notes(id, type, name, description) VALUES(?,?,?,?)`;
 
-    db.run(sql, [type, name, description], (err: Error) => {
+    db.run(sql, [id, type, name, description], (err: Error) => {
         if (err) return console.error(err.message);
-        console.log("New entry added!");
+        console.log(`New entry added: ${id}`);
     });
 
     db.close();
 
-    return new Response(JSON.stringify({ type, name, description }), {
+    return new Response(JSON.stringify({ id, type, name, description }), {
         headers: { "Content-Type": "application/json" },
         status: 200,
     });

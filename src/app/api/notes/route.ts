@@ -1,12 +1,7 @@
-import sqlite3 from "sqlite3";
-import { open } from "sqlite";
-import path from "path";
+import dbOpen from "@/app/helpers/dbOpen";
 
 export async function GET(req: Request) {
-    const db = await open({
-        filename: path.resolve(process.cwd(), "db/notes.db"),
-        driver: sqlite3.Database,
-    });
+    const db = await dbOpen();
 
     const items = await db.all("SELECT * FROM notes");
 
