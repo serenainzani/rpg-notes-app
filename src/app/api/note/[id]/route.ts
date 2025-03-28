@@ -1,14 +1,10 @@
 import dbOpen from "@/app/helpers/dbOpen";
 import { NextRequest } from "next/server";
 
-export async function DELETE(
-    _: NextRequest,
-    { params }: { params: { id: string } }
-) {
+export async function DELETE(req: NextRequest, params: { id: string }) {
     const db = await dbOpen();
-    console.log(params);
 
-    const id = params.id;
+    const { id } = await params;
     const sql = `DELETE FROM notes WHERE id=?`;
 
     db.run(sql, [id], (err: Error) => {
