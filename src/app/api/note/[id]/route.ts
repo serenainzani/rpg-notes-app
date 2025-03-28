@@ -20,15 +20,13 @@ export async function DELETE(req: NextRequest, params: { id: string }) {
     });
 }
 
-export async function PATCH(req: Request, res: Response) {
+export async function PATCH(req: NextRequest) {
     const db = await dbOpen();
-
-    const { id, type, name, description } = await req.json();
-    const sql = `UPDATE notes
-    SET name = '${name}', description = '${description}'
-    WHERE id = ${id}`;
-
-    db.run(sql, [id, name, description], (err: Error) => {
+    const { id, type, name, description } = await req.json(); //todo use path param for id instead of body
+    const sql = `UPDATE notes 
+    SET name = ?, description = ?
+    WHERE id = ?`;
+    db.run(sql, [name, description, id], (err: Error) => {
         if (err) return console.error(err.message);
         console.log(`Entry changed: ${id}`);
     });

@@ -4,7 +4,7 @@ import { Box, Paper, Typography } from "@mui/material";
 import FiltersBar from "./components/FiltersBar";
 import NewEntryForm from "./components/NewEntryForm";
 import Entry from "./components/Entry";
-import { useState, useEffect, useOptimistic } from "react";
+import { useState, useEffect } from "react";
 import { DiaryEntryType } from "./__tests__/data";
 
 export default function Home() {
@@ -22,13 +22,20 @@ export default function Home() {
     const updateNotes = (entry: DiaryEntryType, method: string) => {
         switch (method) {
             case "POST":
-                setNotes((notes) => [...notes, entry]);
+                setNotes((prevNotes) => [...prevNotes, entry]);
                 break;
             case "DELETE":
                 const removedNotes = notes.filter(
                     (note) => entry.id !== note.id
                 );
                 setNotes(removedNotes);
+                break;
+            case "PATCH":
+                const modifiedNotes = notes.map((existingNote) =>
+                    existingNote.id === entry.id ? entry : existingNote
+                );
+                console.log("ath!", modifiedNotes);
+                setNotes(modifiedNotes);
                 break;
         }
     };
@@ -38,6 +45,10 @@ export default function Home() {
         newValue: string
     ) => {
         newValue !== value ? setValue(newValue) : setValue("");
+    };
+
+    const handleCardClick = (id: string) => {
+        cardClicked !== id ? setCardClicked(id) : setCardClicked("");
     };
 
     const filteredNotes = value
@@ -58,11 +69,7 @@ export default function Home() {
                         name={entry.name}
                         description={entry.description}
                         updateNotes={updateNotes}
-                        handleCardClicked={() =>
-                            cardClicked !== entry.id
-                                ? setCardClicked(entry.id)
-                                : setCardClicked("")
-                        }
+                        handleCardClicked={handleCardClick}
                         isCardClicked={cardClicked === entry.id}
                     />
                 ))}
