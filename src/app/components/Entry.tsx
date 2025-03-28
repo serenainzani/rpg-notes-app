@@ -53,7 +53,6 @@ export default function Entry({
     const handleDelete = () => {
         fetch(`/api/note/${id}`, {
             method: "DELETE",
-            body: JSON.stringify({ id }),
             headers: {
                 "Content-Type": "application/json",
             },
