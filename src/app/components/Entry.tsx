@@ -6,14 +6,10 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { DiaryEntryType } from "../__tests__/data";
-import {
-    Face2,
-    Map,
-    PriorityHigh,
-    TextSnippet,
-    DeleteForever,
-} from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { DeleteForever, EditNote } from "@mui/icons-material";
+import { Divider, IconButton } from "@mui/material";
+import Description from "./Description";
+import EntryIcon from "./EntryIcon";
 
 type entryProps = {
     id: string;
@@ -34,22 +30,6 @@ export default function Entry({
     handleCardClicked,
     isCardClicked,
 }: entryProps) {
-    let icon;
-    switch (type) {
-        case "person":
-            icon = <Face2 />;
-            break;
-        case "place":
-            icon = <Map />;
-            break;
-        case "important":
-            icon = <PriorityHigh />;
-            break;
-        default:
-            icon = <TextSnippet />;
-            break;
-    }
-
     const handleDelete = () => {
         fetch(`/api/note/${id}`, {
             method: "DELETE",
@@ -68,11 +48,15 @@ export default function Entry({
             });
     };
 
+    const handleEdit = () => {};
+
     return (
         <Card
             variant="outlined"
             sx={{ maxWidth: 360 }}
-            className={`mb-2 ${isCardClicked && "border-amber-900 shadow-md"}`}
+            className={`mb-2 cursor-pointer ${
+                isCardClicked && "border-amber-900 shadow-md"
+            }`}
             onClick={handleCardClicked}
         >
             <Box sx={{ p: 2 }}>
@@ -80,10 +64,7 @@ export default function Entry({
                     <>
                         <Stack
                             direction="row"
-                            sx={{
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                            }}
+                            className="justify-between items-center"
                         >
                             <Typography
                                 gutterBottom
@@ -92,63 +73,54 @@ export default function Entry({
                             >
                                 {name}
                             </Typography>
-                            <Typography
-                                gutterBottom
-                                variant="h6"
-                                component="div"
-                            >
-                                {icon}
-                            </Typography>
+                            <EntryIcon type={type} />
                         </Stack>
-                        <Typography
-                            variant="body2"
-                            sx={{ color: "text.secondary" }}
-                        >
-                            {description}
-                        </Typography>
+                        <Description text={description} />
                     </>
                 ) : (
                     <>
                         <Stack
                             direction="row"
-                            sx={{
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                            }}
+                            className="justify-between items-top"
                         >
-                            <Typography
-                                gutterBottom
-                                component="div"
-                                variant="body2"
-                                sx={{ color: "text.secondary" }}
-                            >
-                                {description}
-                            </Typography>
-                            <Typography
-                                gutterBottom
-                                variant="h6"
-                                component="div"
-                            >
-                                {icon}
-                            </Typography>
+                            <Description text={description} />
+                            <EntryIcon type={type} />
                         </Stack>
                     </>
                 )}
                 {isCardClicked && (
-                    <Stack direction="row" className="w-full items-center">
-                        <IconButton
-                            aria-label="submit"
-                            size="small"
-                            type="button"
-                            onClick={handleDelete}
-                            className="ml-auto p-0"
+                    <>
+                        <Divider className="mt-3" />
+                        <Stack
+                            direction="row"
+                            className="w-full mt-5 justify-evenly items-center"
                         >
-                            <DeleteForever
-                                fontSize="small"
-                                className="fill-gray-800"
-                            />
-                        </IconButton>
-                    </Stack>
+                            <IconButton
+                                aria-label="submit"
+                                size="small"
+                                type="button"
+                                onClick={handleEdit}
+                                className="p-0"
+                            >
+                                <EditNote
+                                    fontSize="small"
+                                    className="fill-gray-800"
+                                />
+                            </IconButton>
+                            <IconButton
+                                aria-label="submit"
+                                size="small"
+                                type="button"
+                                onClick={handleDelete}
+                                className="p-0"
+                            >
+                                <DeleteForever
+                                    fontSize="small"
+                                    className="fill-gray-800"
+                                />
+                            </IconButton>
+                        </Stack>
+                    </>
                 )}
             </Box>
         </Card>
