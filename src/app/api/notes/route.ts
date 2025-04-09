@@ -1,6 +1,6 @@
 import dbOpen from "@/app/helpers/dbOpen";
 
-export async function GET(req: Request) {
+export async function GET() {
     const db = await dbOpen();
 
     const items = await db.all("SELECT * FROM notes");

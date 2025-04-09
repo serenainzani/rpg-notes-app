@@ -40,10 +40,7 @@ export default function Home() {
         }
     };
 
-    const handleFilterChange = (
-        event: React.SyntheticEvent,
-        newValue: string
-    ) => {
+    const handleFilterChange = (_: React.SyntheticEvent, newValue: string) => {
         newValue !== value ? setValue(newValue) : setValue("");
     };
 

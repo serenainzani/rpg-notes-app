@@ -1,6 +1,6 @@
 import dbOpen from "@/app/helpers/dbOpen";
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
     const db = await dbOpen();
 
     const id = crypto.randomUUID();

@@ -1,10 +1,19 @@
 import dbOpen from "@/app/helpers/dbOpen";
 import { NextRequest } from "next/server";
 
-export async function DELETE(req: NextRequest, params: { id: string }) {
+export async function DELETE(req: NextRequest) {
     const db = await dbOpen();
 
-    const { id } = await params;
+    const url = new URL(req.url);
+    const id = url.pathname.split("/").pop(); // Extract the last segment of the path
+
+    if (!id) {
+        return new Response(JSON.stringify({ error: "ID is required" }), {
+            headers: { "Content-Type": "application/json" },
+            status: 400,
+        });
+    }
+
     const sql = `DELETE FROM notes WHERE id=?`;
 
     db.run(sql, [id], (err: Error) => {
