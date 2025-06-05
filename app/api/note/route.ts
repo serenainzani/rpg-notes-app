@@ -1,20 +1,19 @@
-import dbOpen from "@/app/helpers/dbOpen";
+import { createClient } from "@/utils/supabase/server";
 
 export async function POST(req: Request) {
-    const db = await dbOpen();
-
-    const id = crypto.randomUUID();
+    const noteId = crypto.randomUUID();
     const { type, name, description } = await req.json();
-    const sql = `INSERT INTO notes(id, type, name, description) VALUES(?,?,?,?)`;
 
-    db.run(sql, [id, type, name, description], (err: Error) => {
-        if (err) return console.error(err.message);
-        console.log(`New entry added: ${id}`);
-    });
+    const supabase = await createClient();
 
-    db.close();
+    const { data: rpgNotes, error } = await supabase
+        .from("rpg-notes")
+        .insert({ type, name, description, noteId })
+        .select();
 
-    return new Response(JSON.stringify({ id, type, name, description }), {
+    console.log(error);
+
+    return new Response(JSON.stringify(rpgNotes), {
         headers: { "Content-Type": "application/json" },
         status: 200,
     });

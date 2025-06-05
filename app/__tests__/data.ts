@@ -1,6 +1,8 @@
 export type DiaryEntryType = {
-    id: string;
+    id?: number;
+    noteId: string;
     type: string;
     name?: string | null;
     description: string;
+    created?: string;
 };

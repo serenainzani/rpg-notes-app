@@ -17,7 +17,7 @@ import Description from "./Description";
 import EntryIcon from "./EntryIcon";
 
 type entryProps = {
-    id: string;
+    noteId: string;
     type: string;
     name?: string | null;
     description: string;
@@ -27,7 +27,7 @@ type entryProps = {
 };
 
 export default function Entry({
-    id,
+    noteId,
     type,
     name,
     description,
@@ -39,7 +39,7 @@ export default function Entry({
     const [editFormValues, setEditFormValues] = useState({ name, description });
 
     const handleDelete = () => {
-        fetch(`/api/note/${id}`, {
+        fetch(`/api/note/${noteId}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -47,9 +47,9 @@ export default function Entry({
         })
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error(`Failed to delete entry: ${id}`);
+                    throw new Error(`Failed to delete entry: ${noteId}`);
                 }
-                updateNotes({ id, type, name, description }, "DELETE");
+                updateNotes({ noteId, type, name, description }, "DELETE");
             })
             .catch((error) => {
                 console.error("Failed to delete entry:", error);
@@ -57,18 +57,18 @@ export default function Entry({
     };
 
     const handlePatch = () => {
-        fetch(`/api/note/${id}`, {
+        fetch(`/api/note/${noteId}`, {
             method: "PATCH",
-            body: JSON.stringify({ ...editFormValues, type, id }),
+            body: JSON.stringify({ ...editFormValues, type, noteId }),
             headers: {
                 "Content-Type": "application/json",
             },
         })
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error(`Failed to amend entry: ${id}`);
+                    throw new Error(`Failed to amend entry: ${noteId}`);
                 }
-                updateNotes({ ...editFormValues, type, id }, "PATCH");
+                updateNotes({ ...editFormValues, type, noteId }, "PATCH");
                 setEditing(false);
             })
             .catch((error) => {
@@ -182,7 +182,7 @@ export default function Entry({
             className={`mb-2 cursor-pointer ${
                 isCardClicked && "border-amber-900 shadow-md"
             }`}
-            onClick={() => handleCardClicked(id)}
+            onClick={() => handleCardClicked(noteId)}
         >
             <Box sx={{ p: 2 }}>
                 {cardContent()}

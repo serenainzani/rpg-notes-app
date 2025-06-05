@@ -1,9 +1,7 @@
-import dbOpen from "@/app/helpers/dbOpen";
+import { createClient } from "@/utils/supabase/server";
 import { NextRequest } from "next/server";
 
 export async function DELETE(req: NextRequest) {
-    const db = await dbOpen();
-
     const url = new URL(req.url);
     const id = url.pathname.split("/").pop(); // Extract the last segment of the path
 
@@ -14,35 +12,36 @@ export async function DELETE(req: NextRequest) {
         });
     }
 
-    const sql = `DELETE FROM notes WHERE id=?`;
+    const supabase = await createClient();
 
-    db.run(sql, [id], (err: Error) => {
-        if (err) return console.error(err.message);
-        console.log(`Entry deleted: ${id}`);
-    });
+    const { data: rpgNotes } = await supabase
+        .from("rpg-notes")
+        .delete()
+        .eq("noteId", id)
+        .select();
 
-    db.close();
+    const responseData = rpgNotes?.[0];
 
-    return new Response(JSON.stringify({ id }), {
+    return new Response(JSON.stringify(responseData), {
         headers: { "Content-Type": "application/json" },
         status: 200,
     });
 }
 
 export async function PATCH(req: NextRequest) {
-    const db = await dbOpen();
-    const { id, type, name, description } = await req.json(); //todo use path param for id instead of body
-    const sql = `UPDATE notes 
-    SET name = ?, description = ?
-    WHERE id = ?`;
-    db.run(sql, [name, description, id], (err: Error) => {
-        if (err) return console.error(err.message);
-        console.log(`Entry changed: ${id}`);
-    });
+    const { noteId, type, name, description } = await req.json(); //todo use path param for id instead of body
 
-    db.close();
+    const supabase = await createClient();
 
-    return new Response(JSON.stringify({ id, type, name, description }), {
+    const { data: rpgNotes, error } = await supabase
+        .from("rpg-notes")
+        .update({ type, name, description })
+        .eq("noteId", noteId)
+        .select();
+
+    const responseData = rpgNotes?.[0];
+
+    return new Response(JSON.stringify(responseData), {
         headers: { "Content-Type": "application/json" },
         status: 200,
     });

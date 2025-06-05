@@ -1,21 +1,16 @@
-import dbOpen from "@/app/helpers/dbOpen";
+import { createClient } from "@/utils/supabase/server";
 
 export async function GET() {
     try {
-        console.log("[API] /api/notes GET called");
+        const supabase = await createClient();
+        const { data: rpgNotes } = await supabase.from("rpg-notes").select();
 
-        const db = await dbOpen();
-        const items = await db.all("SELECT * FROM notes");
-        db.close();
-
-        console.log("[API] Returning notes:", items);
-
-        return new Response(JSON.stringify(items), {
+        return new Response(JSON.stringify(rpgNotes, null, 2), {
             headers: { "Content-Type": "application/json" },
             status: 200,
         });
     } catch (error) {
-        console.error("[API] Error in /api/notes:", error);
+        console.error("Error in GET /api/notes:", error);
 
         return new Response(
             JSON.stringify({

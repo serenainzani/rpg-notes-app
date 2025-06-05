@@ -65,7 +65,7 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
         });
 
         const responseData = await response.json();
-        updateNotes(responseData, "POST");
+        updateNotes(responseData[0], "POST");
         setFormEntryValues(defaultFormValues);
     }
 

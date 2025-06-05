@@ -22,19 +22,23 @@ export default function Home() {
     const updateNotes = (entry: DiaryEntryType, method: string) => {
         switch (method) {
             case "POST":
-                setNotes((prevNotes) => [...prevNotes, entry]);
+                console.log("new entry", entry);
+                setNotes((prevNotes) => {
+                    const updatedNotes = [...prevNotes, entry];
+                    console.log("updated notes", updatedNotes); // Debugging the notes state
+                    return updatedNotes;
+                });
                 break;
             case "DELETE":
                 const removedNotes = notes.filter(
-                    (note) => entry.id !== note.id
+                    (note) => entry.noteId !== note.noteId
                 );
                 setNotes(removedNotes);
                 break;
             case "PATCH":
                 const modifiedNotes = notes.map((existingNote) =>
-                    existingNote.id === entry.id ? entry : existingNote
+                    existingNote.noteId === entry.noteId ? entry : existingNote
                 );
-                console.log("ath!", modifiedNotes);
                 setNotes(modifiedNotes);
                 break;
         }
@@ -58,16 +62,16 @@ export default function Home() {
                 <Typography variant="h2" component="h1" gutterBottom>
                     RPG Notes
                 </Typography>
-                {filteredNotes.map((entry) => (
+                {filteredNotes.map((entry, index) => (
                     <Entry
-                        key={entry.id}
-                        id={entry.id}
+                        key={entry.noteId || index}
+                        noteId={entry.noteId}
                         type={entry.type}
                         name={entry.name}
                         description={entry.description}
                         updateNotes={updateNotes}
                         handleCardClicked={handleCardClick}
-                        isCardClicked={cardClicked === entry.id}
+                        isCardClicked={cardClicked === entry.noteId}
                     />
                 ))}
             </div>
