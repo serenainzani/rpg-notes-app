@@ -8,6 +8,11 @@
   
 </p>
 
+## !!!! NOTE !!!!! 
+I have disabled the supabase policies, so the app can't read/write to the db. This means I need to re-enable the policies for the app to work.
+
+<hr />
+
 The minimalist web app for making notes during your RPG game. Check it out [here](https://rpg-notes-app.vercel.app/)!
 
 <img width="280" alt="image" src="https://github.com/user-attachments/assets/28eb2a85-0065-44d2-9b1a-695b7f602d43" />
