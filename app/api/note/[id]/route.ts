@@ -33,7 +33,7 @@ export async function PATCH(req: NextRequest) {
 
     const supabase = await createClient();
 
-    const { data: rpgNotes, error } = await supabase
+    const { data: rpgNotes } = await supabase
         .from("rpg-notes")
         .update({ type, name, description })
         .eq("noteId", noteId)
