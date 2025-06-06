@@ -120,11 +120,12 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
                 />
                 <Button
                     disableElevation
-                    className="h-14 mt-2"
+                    className="h-14"
                     aria-label="submit"
                     type="submit"
                     sx={{
                         backgroundColor: (theme) => theme.palette.primary.main,
+                        marginTop: 1,
                     }}
                 >
                     <AddBox className="text-3xl text-gray-200" />
