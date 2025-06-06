@@ -14,7 +14,6 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { AddBox } from "@mui/icons-material";
 
 import { DiaryEntryType } from "../__tests__/data";
-import { theme } from "../themeOptions";
 
 type EntryFormProps = {
     updateNotes: (entry: DiaryEntryType, command: string) => void;
