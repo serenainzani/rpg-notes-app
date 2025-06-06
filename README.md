@@ -12,7 +12,7 @@
 
 The minimalist web app for making notes during your RPG game. Check it out [here](https://rpg-notes-app.vercel.app/)!
 
-<img width="280" alt="image" src="https://github.com/user-attachments/assets/28eb2a85-0065-44d2-9b1a-695b7f602d43" />
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/5b7b478e-d86d-40cb-8750-e929cd7b8b73" />
 
 
 ## Tech Stack
