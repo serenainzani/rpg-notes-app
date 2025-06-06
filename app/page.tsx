@@ -59,7 +59,7 @@ export default function Home() {
 
     return (
         <ThemeProvider theme={theme}>
-            <div>
+            <div className="mx-2">
                 <Typography
                     variant="h2"
                     component="h1"

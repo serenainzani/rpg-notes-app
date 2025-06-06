@@ -8,9 +8,6 @@
   
 </p>
 
-## !!!! NOTE !!!!! 
-I have disabled the supabase policies, so the app can't read/write to the db. This means I need to re-enable the policies for the app to work.
-
 <hr />
 
 The minimalist web app for making notes during your RPG game. Check it out [here](https://rpg-notes-app.vercel.app/)!
@@ -20,9 +17,10 @@ The minimalist web app for making notes during your RPG game. Check it out [here
 
 ## Tech Stack
 This app uses:
-- **Next.js** frontend with **App Router** for the API
-- **TypeScript** as the main
-- **SQLite** for the database
+- **Next.js** frontend
+- **Next.js App Router** for the API
+- **PostgreSQL** for the database (through Supabase)
+- TypeScript & Tailwind
 
 ## Using the App
 You can submit 4 types of entries: note, person, place, and important.
