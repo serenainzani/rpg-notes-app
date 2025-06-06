@@ -1,8 +1,8 @@
 "use client";
 
 import {
+    Button,
     FormControl,
-    IconButton,
     InputLabel,
     MenuItem,
     Select,
@@ -70,9 +70,15 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white pb-2">
-            <Stack direction="row" className="w-96 pb-2">
-                <FormControl className="w-48 mr-1">
+        <form onSubmit={handleSubmit} className="w-full  bg-white pb-2">
+            <Stack direction="row" className="w-full pb-2">
+                <FormControl
+                    className={`${
+                        ["person", "place"].includes(formEntryValues.type)
+                            ? "w-1/2"
+                            : "w-full"
+                    }`}
+                >
                     <InputLabel id="entry-type-label">Entry Type</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
@@ -97,11 +103,11 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
                         required
                         onChange={handleChange}
                         value={formEntryValues.name}
-                        className="ml-1"
+                        className="w-1/2 ml-1"
                     />
                 )}
             </Stack>
-            <Stack direction="row" className="items-center">
+            <Stack direction="column" className="">
                 <TextField
                     id="description"
                     name="description"
@@ -109,18 +115,17 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
                     multiline
                     rows={3}
                     required
-                    className="w-96"
                     onChange={handleChange}
                     value={formEntryValues.description}
                 />
-                <IconButton
+                <Button
+                    disableElevation
+                    className="h-14 bg-primary mt-2"
                     aria-label="submit"
-                    size="large"
                     type="submit"
-                    className="h-14"
                 >
-                    <AddBox className="text-3xl" />
-                </IconButton>
+                    <AddBox className="text-3xl text-gray-200" />
+                </Button>
             </Stack>
         </form>
     );

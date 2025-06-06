@@ -178,8 +178,7 @@ export default function Entry({
     return (
         <Card
             variant="outlined"
-            sx={{ maxWidth: 360 }}
-            className={`mb-2 cursor-pointer ${
+            className={`lg:w-[640px] mb-2 cursor-pointer ${
                 isCardClicked && "border-amber-900 shadow-md"
             }`}
             onClick={() => handleCardClicked(noteId)}
@@ -191,7 +190,7 @@ export default function Entry({
                         <Divider className="mt-3" />
                         <Stack
                             direction="row"
-                            className="w-full mt-5 justify-evenly items-center"
+                            className="mt-5 justify-evenly items-center"
                         >
                             <IconButton
                                 aria-label="submit"
@@ -200,10 +199,7 @@ export default function Entry({
                                 onClick={handleEdit}
                                 className="p-0"
                             >
-                                <EditNote
-                                    fontSize="small"
-                                    className="fill-gray-800"
-                                />
+                                <EditNote fontSize="small" color="secondary" />
                             </IconButton>
                             <IconButton
                                 aria-label="submit"
@@ -212,10 +208,7 @@ export default function Entry({
                                 onClick={handleDelete}
                                 className="p-0"
                             >
-                                <DeleteForever
-                                    fontSize="small"
-                                    className="fill-gray-800"
-                                />
+                                <DeleteForever fontSize="small" color="error" />
                             </IconButton>
                         </Stack>
                     </>
@@ -234,10 +227,7 @@ export default function Entry({
                                 onClick={handlePatch}
                                 className="p-0"
                             >
-                                <Done
-                                    fontSize="small"
-                                    className="fill-gray-800"
-                                />
+                                <Done fontSize="small" color="success" />
                             </IconButton>
                             <IconButton
                                 aria-label="submit"
@@ -246,10 +236,7 @@ export default function Entry({
                                 onClick={handleEdit}
                                 className="p-0"
                             >
-                                <Close
-                                    fontSize="small"
-                                    className="fill-gray-800"
-                                />
+                                <Close fontSize="small" color="error" />
                             </IconButton>
                         </Stack>
                     </>

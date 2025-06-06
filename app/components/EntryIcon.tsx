@@ -9,16 +9,16 @@ export default function EntryIcon({ type }: EntryIconProps) {
     let icon;
     switch (type) {
         case "person":
-            icon = <Face2 />;
+            icon = <Face2 color="secondary" />;
             break;
         case "place":
-            icon = <Map />;
+            icon = <Map color="success" />;
             break;
         case "important":
-            icon = <PriorityHigh />;
+            icon = <PriorityHigh color="error" />;
             break;
         default:
-            icon = <TextSnippet />;
+            icon = <TextSnippet color="primary" />;
             break;
     }
 

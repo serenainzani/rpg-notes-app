@@ -1,11 +1,12 @@
 "use client";
 
-import { Box, Paper, Typography } from "@mui/material";
+import { Paper, ThemeProvider, Typography } from "@mui/material";
 import FiltersBar from "./components/FiltersBar";
 import NewEntryForm from "./components/NewEntryForm";
 import Entry from "./components/Entry";
 import { useState, useEffect } from "react";
 import { DiaryEntryType } from "./__tests__/data";
+import { theme } from "./themeOptions";
 
 export default function Home() {
     const [value, setValue] = useState("");
@@ -57,11 +58,24 @@ export default function Home() {
         : notes;
 
     return (
-        <div>
-            <div className="pb-64 pt-8">
-                <Typography variant="h2" component="h1" gutterBottom>
+        <ThemeProvider theme={theme}>
+            <div>
+                <Typography
+                    variant="h2"
+                    component="h1"
+                    className="text-center py-5"
+                    color="primary"
+                >
                     RPG Notes
                 </Typography>
+                <NewEntryForm updateNotes={updateNotes} />
+                <Paper elevation={3} className="mb-3">
+                    <FiltersBar
+                        value={value}
+                        handleFilterChange={handleFilterChange}
+                    />
+                </Paper>
+
                 {filteredNotes.map((entry, index) => (
                     <Entry
                         key={entry.noteId || index}
@@ -75,15 +89,6 @@ export default function Home() {
                     />
                 ))}
             </div>
-            <Box className="fixed bottom-0 pt-5 bg-white">
-                <NewEntryForm updateNotes={updateNotes} />
-                <Paper elevation={3}>
-                    <FiltersBar
-                        value={value}
-                        handleFilterChange={handleFilterChange}
-                    />
-                </Paper>
-            </Box>
-        </div>
+        </ThemeProvider>
     );
 }
