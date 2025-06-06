@@ -25,8 +25,7 @@ export default function Home() {
             case "POST":
                 console.log("new entry", entry);
                 setNotes((prevNotes) => {
-                    const updatedNotes = [...prevNotes, entry];
-                    console.log("updated notes", updatedNotes); // Debugging the notes state
+                    const updatedNotes = [entry, ...prevNotes];
                     return updatedNotes;
                 });
                 break;

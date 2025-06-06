@@ -14,6 +14,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { AddBox } from "@mui/icons-material";
 
 import { DiaryEntryType } from "../__tests__/data";
+import { theme } from "../themeOptions";
 
 type EntryFormProps = {
     updateNotes: (entry: DiaryEntryType, command: string) => void;
@@ -70,7 +71,7 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="w-full  bg-white pb-2">
+        <form onSubmit={handleSubmit} className="w-full pb-2">
             <Stack direction="row" className="w-full pb-2">
                 <FormControl
                     className={`${
@@ -120,9 +121,12 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
                 />
                 <Button
                     disableElevation
-                    className="h-14 bg-primary mt-2"
+                    className="h-14 mt-2"
                     aria-label="submit"
                     type="submit"
+                    sx={{
+                        backgroundColor: (theme) => theme.palette.primary.main,
+                    }}
                 >
                     <AddBox className="text-3xl text-gray-200" />
                 </Button>
