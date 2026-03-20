@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { SupabaseClient, User } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 export async function createClient() {
     const cookieStore = await cookies();
@@ -24,4 +25,23 @@ export async function createClient() {
             },
         }
     );
+}
+
+const unauthorizedResponse = () =>
+    new Response(JSON.stringify({ error: "Unauthorized" }), {
+        headers: { "Content-Type": "application/json" },
+        status: 401,
+    });
+
+export async function requireAuth(
+    supabase: SupabaseClient
+): Promise<
+    | { user: User; errorResponse: null }
+    | { user: null; errorResponse: Response }
+> {
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return { user: null, errorResponse: unauthorizedResponse() };
+    return { user, errorResponse: null };
 }

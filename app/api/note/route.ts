@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/server";
+import { createClient, requireAuth } from "@/utils/supabase/server";
 
 export async function POST(req: Request) {
     const noteId = crypto.randomUUID();
@@ -6,9 +6,12 @@ export async function POST(req: Request) {
 
     const supabase = await createClient();
 
+    const { user, errorResponse } = await requireAuth(supabase);
+    if (errorResponse) return errorResponse;
+
     const { data: rpgNotes, error } = await supabase
         .from("rpg-notes")
-        .insert({ type, name, description, noteId })
+        .insert({ type, name, description, noteId, user_id: user.id })
         .select();
 
     console.log(error);

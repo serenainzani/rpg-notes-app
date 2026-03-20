@@ -1,8 +1,12 @@
-import { createClient } from "@/utils/supabase/server";
+import { createClient, requireAuth } from "@/utils/supabase/server";
 
 export async function GET() {
     try {
         const supabase = await createClient();
+
+        const { errorResponse } = await requireAuth(supabase);
+        if (errorResponse) return errorResponse;
+
         const { data: rpgNotes } = await supabase
             .from("rpg-notes")
             .select()
