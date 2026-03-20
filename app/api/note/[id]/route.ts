@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/server";
+import { createClient, requireAuth } from "@/utils/supabase/server";
 import { NextRequest } from "next/server";
 
 export async function DELETE(req: NextRequest) {
@@ -13,6 +13,9 @@ export async function DELETE(req: NextRequest) {
     }
 
     const supabase = await createClient();
+
+    const { errorResponse } = await requireAuth(supabase);
+    if (errorResponse) return errorResponse;
 
     const { data: rpgNotes } = await supabase
         .from("rpg-notes")
@@ -32,6 +35,9 @@ export async function PATCH(req: NextRequest) {
     const { noteId, type, name, description } = await req.json(); //todo use path param for id instead of body
 
     const supabase = await createClient();
+
+    const { errorResponse } = await requireAuth(supabase);
+    if (errorResponse) return errorResponse;
 
     const { data: rpgNotes } = await supabase
         .from("rpg-notes")
