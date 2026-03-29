@@ -1,0 +1,368 @@
+openapi: 3.0.0
+info:
+    title: RPG Notes API
+    version: 1.0.0
+    description: API for managing RPG notes and campaigns
+
+security:
+    - cookieAuth: []
+
+components:
+    securitySchemes:
+        cookieAuth:
+            type: apiKey
+            in: cookie
+            name: session
+            description: Supabase session cookie (set automatically after login)
+
+    schemas:
+        Note:
+            type: object
+            properties:
+                noteId:
+                    type: string
+                    format: uuid
+                    example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                type:
+                    type: string
+                    enum: [note, person, place, important]
+                    example: person
+                name:
+                    type: string
+                    nullable: true
+                    example: Alessya the Wise
+                description:
+                    type: string
+                    example: A mysterious wizard encountered in the tavern. Knows more than she lets on.
+                created:
+                    type: string
+                    format: date-time
+                    example: "2024-03-15T20:00:00.000Z"
+                user_id:
+                    type: string
+                    format: uuid
+                    example: 11111111-2222-3333-4444-555555555555
+                campaign_id:
+                    type: string
+                    format: uuid
+                    nullable: true
+                    example: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+
+        Campaign:
+            type: object
+            properties:
+                id:
+                    type: string
+                    format: uuid
+                    example: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+                title:
+                    type: string
+                    example: "Hallow's Haunt"
+                description:
+                    type: string
+                    example: A halloween-themed one-shot adventure based off Lasers & Feelings
+                user_id:
+                    type: string
+                    format: uuid
+                    example: 11111111-2222-3333-4444-555555555555
+                created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-03-01T18:00:00.000Z"
+                last_note:
+                    type: string
+                    format: date-time
+                    nullable: true
+                    example: "2024-03-15T20:00:00.000Z"
+
+        Error:
+            type: object
+            properties:
+                error:
+                    type: string
+                    example: Internal Server Error
+                details:
+                    type: string
+                    example: Unexpected token in JSON
+
+paths:
+    /api/notes:
+        get:
+            summary: Fetch all notes
+            description: Returns all notes for the authenticated user, ordered by creation date descending. Optionally filtered by campaign.
+            tags: [Notes]
+            parameters:
+                - name: campaign_id
+                  in: query
+                  required: false
+                  description: Filter notes by campaign ID
+                  schema:
+                      type: string
+                      format: uuid
+                      example: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+            responses:
+                "200":
+                    description: List of notes
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Note"
+                            example:
+                                - noteId: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                                  type: person
+                                  name: Alessya the Wise
+                                  description: A mysterious wizard encountered in the tavern. Knows more than she lets on.
+                                  created: "2024-03-15T20:00:00.000Z"
+                                  user_id: 11111111-2222-3333-4444-555555555555
+                                  campaign_id: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+                                - noteId: bbbbbbbb-cccc-dddd-eeee-ffffffffffff
+                                  type: place
+                                  name: The Broken Anvil Tavern
+                                  description: First meeting point. Innkeeper knows about the disappearances.
+                                  created: "2024-03-10T19:30:00.000Z"
+                                  user_id: 11111111-2222-3333-4444-555555555555
+                                  campaign_id: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+    /api/note:
+        post:
+            summary: Create a note
+            tags: [Notes]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [type, description]
+                            properties:
+                                type:
+                                    type: string
+                                    enum: [note, person, place, important]
+                                name:
+                                    type: string
+                                    nullable: true
+                                description:
+                                    type: string
+                                campaign_id:
+                                    type: string
+                                    format: uuid
+                                    nullable: true
+                        examples:
+                            person:
+                                summary: Add a person
+                                value:
+                                    type: person
+                                    name: Alessya the Wise
+                                    description: A mysterious wizard encountered in the tavern. Knows more than she lets on.
+                                    campaign_id: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+                            place:
+                                summary: Add a place
+                                value:
+                                    type: place
+                                    name: The Broken Anvil Tavern
+                                    description: First meeting point. Innkeeper knows about the disappearances.
+                                    campaign_id: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+                            note:
+                                summary: Add a general note
+                                value:
+                                    type: note
+                                    description: The red handkerchief found at the crime scene matches the guild's colours.
+                                    campaign_id: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+                            important:
+                                summary: Add an important note
+                                value:
+                                    type: important
+                                    description: "The king's seal was forged — the assassination order is fake."
+            responses:
+                "200":
+                    description: Created note
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Note"
+                            example:
+                                - noteId: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                                  type: person
+                                  name: Alessya the Wise
+                                  description: A mysterious wizard encountered in the tavern. Knows more than she lets on.
+                                  created: "2024-03-15T20:00:00.000Z"
+                                  user_id: 11111111-2222-3333-4444-555555555555
+                                  campaign_id: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+                "401":
+                    description: Unauthorized
+
+    /api/note/{id}:
+        delete:
+            summary: Delete a note
+            tags: [Notes]
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: Note ID (noteId)
+                  schema:
+                      type: string
+                      format: uuid
+                      example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+            responses:
+                "200":
+                    description: Deleted note
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Note"
+                            example:
+                                noteId: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                                type: person
+                                name: Alessya the Wise
+                                description: A mysterious wizard encountered in the tavern. Knows more than she lets on.
+                                created: "2024-03-15T20:00:00.000Z"
+                                user_id: 11111111-2222-3333-4444-555555555555
+                                campaign_id: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+                "400":
+                    description: ID is required
+                "401":
+                    description: Unauthorized
+
+        patch:
+            summary: Update a note
+            tags: [Notes]
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: Note ID (noteId)
+                  schema:
+                      type: string
+                      format: uuid
+                      example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [noteId]
+                            properties:
+                                noteId:
+                                    type: string
+                                    format: uuid
+                                type:
+                                    type: string
+                                    enum: [note, person, place, important]
+                                name:
+                                    type: string
+                                    nullable: true
+                                description:
+                                    type: string
+                        example:
+                            noteId: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                            type: person
+                            name: Alessya the Wise
+                            description: A mysterious wizard. Now known to be working for the thieves guild.
+            responses:
+                "200":
+                    description: Updated note
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Note"
+                            example:
+                                noteId: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                                type: person
+                                name: Alessya the Wise
+                                description: A mysterious wizard. Now known to be working for the thieves guild.
+                                created: "2024-03-15T20:00:00.000Z"
+                                user_id: 11111111-2222-3333-4444-555555555555
+                                campaign_id: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+                "401":
+                    description: Unauthorized
+
+    /api/campaigns:
+        get:
+            summary: Fetch all campaigns
+            description: Returns all campaigns for the authenticated user, ordered by creation date descending.
+            tags: [Campaigns]
+            responses:
+                "200":
+                    description: List of campaigns
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Campaign"
+                            example:
+                                - id: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+                                  title: "Hallow's Haunt"
+                                  description: A halloween-themed one-shot adventure based off Lasers & Feelings
+                                  user_id: 11111111-2222-3333-4444-555555555555
+                                  created_at: "2024-03-01T18:00:00.000Z"
+                                  last_note: "2024-03-15T20:00:00.000Z"
+                                - id: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+                                  title: Tomb of Treasures
+                                  description: A jungle expedition for gold, glory and unsolved mysteries
+                                  user_id: 11111111-2222-3333-4444-555555555555
+                                  created_at: "2024-01-10T12:00:00.000Z"
+                                  last_note: null
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+        post:
+            summary: Create a campaign
+            tags: [Campaigns]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [title]
+                            properties:
+                                title:
+                                    type: string
+                                description:
+                                    type: string
+                        example:
+                            title: "Hallow's Haunt"
+                            description: A halloween-themed one-shot adventure based off Lasers & Feelings
+            responses:
+                "200":
+                    description: Created campaign
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Campaign"
+                            example:
+                                id: f9e8d7c6-b5a4-3210-fedc-ba0987654321
+                                title: "Hallow's Haunt"
+                                description: A halloween-themed one-shot adventure based off Lasers & Feelings
+                                user_id: 11111111-2222-3333-4444-555555555555
+                                created_at: "2024-03-01T18:00:00.000Z"
+                                last_note: "2024-03-15T20:00:00.000Z"
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
