@@ -12,22 +12,11 @@
 
 The minimalist web app for making notes during your RPG game. Check it out [here](https://rpg-notes-app.vercel.app/)!
 
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/5b7b478e-d86d-40cb-8750-e929cd7b8b73" />
+<img width="600" alt="image" src="./imgs/rpg-notes-screenshots-campaigns.png" />
 
+<img width="600" alt="image" src="./imgs/rpg-notes-screenshots-notes.png" />
 
-## Tech Stack
-This app uses:
-- **Next.js** frontend
-- **Next.js App Router** for the API
-- **PostgreSQL** for the database (through Supabase)
-- TypeScript & Tailwind
-
-## Using the App
-You can submit 4 types of entries: note, person, place, and important.
-
-I picked these as it what I log the most during my game.
-
-## Dev Setup
+## Dev Quickstart
 
 First, run the development server:
 
@@ -35,18 +24,26 @@ First, run the development server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the landing page.
+
+## Tech Stack
+This is a **Next.js** app using the App Router. It is written in **Typescript**, with **Tailwind** for the CSS. The database is implemented with **Supabase** (PostgreSQL). Google is used for OAuth.
+
+## Using the App
+To use the app you must log in with the Google OAuth. This is to ensure only you can see your own notes.
+
+Next you have to make a new campaign, or click on one of your existing campaigns. Please note currently campaigns cannot be deleted or titles changed once created.
+
+For note taking, you can submit 4 types of entries: note, person, place, and important. I picked these as it what I log the most during my game. Notes are sorted in descending date order, and can be edited and deleted by clicking on them.
 
 The main page of the app is in `app/page.tsx`. 
 
 ## API
 
-There are two endpoints:
-- /api/notes - GET - returns all of the entries
-- /api/note - POST - creates a new entry
+The API supports CRUD for notes and campaigns data. The routes can be found in the `app/api/` directory and the swagger.
 
-End points planned for the future:
-- /api/note/{id} - DELETE - remove an entry
-- /api/note/{id} - PUT - update an entry
+### Swagger
 
-<br />Swagger tbc
+You can view the swagger in the [swagger.yaml](./swagger.yaml) file.
+
+Alternatively run `npm run dev` and go to `http://localhost:3000/api/docs`
