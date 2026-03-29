@@ -159,15 +159,16 @@ export default function Home() {
                         </List>
 
                         <nav className="flex justify-evenly w-96">
-                            <Button
-                                variant="contained"
-                                disableElevation
-                                onClick={() => setDialogOpen(true)}
-                                className="flex justify-center mt-4"
-                                color="primary"
-                            >
-                                New Campaign
-                            </Button>
+                            <div className="flex justify-center mt-4">
+                                <Button
+                                    variant="contained"
+                                    disableElevation
+                                    onClick={() => setDialogOpen(true)}
+                                    color="primary"
+                                >
+                                    New Campaign
+                                </Button>
+                            </div>
                             <AuthButton
                                 onClick={handleSignOut}
                                 message="Sign out"

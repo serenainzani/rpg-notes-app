@@ -123,14 +123,15 @@ export default function CampaignNotes() {
                         ))}
 
                         <div className="flex justify-center">
-                            <Button
-                                className="flex justify-center mt-4 mr-2"
-                                variant="contained"
-                                color="primary"
-                                onClick={() => router.push("/")}
-                            >
-                                Campaigns
-                            </Button>
+                            <div className="flex justify-center mt-4 mr-2">
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => router.push("/")}
+                                >
+                                    Campaigns
+                                </Button>
+                            </div>
                             <AuthButton
                                 onClick={handleSignOut}
                                 message="Sign out"
