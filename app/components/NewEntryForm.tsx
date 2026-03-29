@@ -17,6 +17,7 @@ import { DiaryEntryType } from "../__tests__/data";
 
 type EntryFormProps = {
     updateNotes: (entry: DiaryEntryType, command: string) => void;
+    campaignId?: string;
 };
 
 const defaultFormValues = {
@@ -25,7 +26,7 @@ const defaultFormValues = {
     description: "",
 };
 
-export default function NewEntryForm({ updateNotes }: EntryFormProps) {
+export default function NewEntryForm({ updateNotes, campaignId }: EntryFormProps) {
     const [formEntryValues, setFormEntryValues] = useState(defaultFormValues);
 
     const handleChange = (
@@ -52,6 +53,7 @@ export default function NewEntryForm({ updateNotes }: EntryFormProps) {
             name,
             type,
             description,
+            campaign_id: campaignId ?? null,
         };
 
         // TODO put this all in a try catch block, so entry only appears on page if POST was a success

@@ -8,7 +8,7 @@ interface AuthButtonProps {
 export default function AuthButton({ onClick, message }: AuthButtonProps) {
     return (
         <div className="flex justify-center mt-4">
-            <Button variant="contained" onClick={onClick}>
+            <Button variant="contained" color="secondary" onClick={onClick}>
                 {message}
             </Button>
         </div>
