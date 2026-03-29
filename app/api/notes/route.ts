@@ -10,7 +10,7 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const campaignId = searchParams.get("campaign_id");
 
-        let query = supabase
+        const query = supabase
             .from("rpg-notes")
             .select()
             .eq("campaign_id", campaignId)

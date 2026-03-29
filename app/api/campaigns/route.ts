@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 
         const { title, description } = await req.json();
 
-        const { data: campaign, error } = await supabase
+        const { data: campaign } = await supabase
             .from("rpg-notes-campaign")
             .insert({ title, description, user_id: user.id })
             .select()
