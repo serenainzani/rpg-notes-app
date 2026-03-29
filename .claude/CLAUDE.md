@@ -32,3 +32,4 @@ Tests live in `app/__tests__/`. Jest is configured with `jsdom` environment and 
 ## Coding Style
 
 - reduce code duplication where possible when generating new code or making new code changes
+- avoid using sx for styling, use className and tailwind instead

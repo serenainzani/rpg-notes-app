@@ -1,16 +1,23 @@
 import { createClient, requireAuth } from "@/utils/supabase/server";
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
         const supabase = await createClient();
 
-        const { errorResponse } = await requireAuth(supabase);
+        const { user, errorResponse } = await requireAuth(supabase);
         if (errorResponse) return errorResponse;
 
-        const { data: rpgNotes } = await supabase
+        const { searchParams } = new URL(request.url);
+        const campaignId = searchParams.get("campaign_id");
+
+        const query = supabase
             .from("rpg-notes")
             .select()
+            .eq("campaign_id", campaignId)
+            .eq("user_id", user.id)
             .order("created", { ascending: false });
+
+        const { data: rpgNotes } = await query;
 
         return new Response(JSON.stringify(rpgNotes, null, 2), {
             headers: { "Content-Type": "application/json" },
